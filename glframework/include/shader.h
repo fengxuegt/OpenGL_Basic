@@ -16,6 +16,7 @@ public:
 
     void setFloat(std::string name, float value);
     void setUniform(std::string name, float value);
+    void setMat4(std::string name, glm::mat4 matrix);
 
     void begin();
     void end();

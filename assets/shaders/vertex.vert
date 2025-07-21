@@ -5,8 +5,11 @@ layout (location = 2) in vec2 aUV;
 out vec3 color;
 out vec2 uv;
 uniform float time;
+uniform mat4 transformMat;
+uniform mat4 viewMatrix;
 void main() {
-    gl_Position = vec4(aPosition, 1.0f);
+    vec4 position = vec4(aPosition, 1.0f);
+    gl_Position = viewMatrix * transformMat * position;
     color = aColor;
     uv = aUV;
 }

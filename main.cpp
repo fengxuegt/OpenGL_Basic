@@ -6,6 +6,7 @@
 #include "application.h"
 #include "texture.h"
 
+
 #include "stb_image.h"
 
 void frameBufferSizeCallback(GLFWwindow* window, int width, int height);
@@ -123,11 +124,72 @@ void prepareShader() {
     shader = new Shader("assets/shaders/vertex.vert", "assets/shaders/frag.frag");
 }
 void prepareTexture() {
-    grassTexture = new Texture ("assets/textures/grass.jpg", 0);
+    grassTexture = new Texture ("assets/textures/goku.jpg", 0);
     landTexture = new Texture ("assets/textures/land.jpg", 1);
     noiseTexture = new Texture ("assets/textures/noise.jpg", 2);
 }
+glm::mat4 viewMatrix = glm::mat4(1.0f);
+void prepareCamera() {
+    viewMatrix = glm::lookAt(glm::vec3(0.5, 0, 0.5f), glm::vec3(0.5f, 0, 0), glm::vec3(0, 1, 0));
+}
 
+
+glm::mat4 transformMat = glm::mat4(1.0f);
+
+void preTransform() {
+    // 先平移再叠加旋转
+    // transformMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.5f, 0.0f, 0.0f));
+
+    // 先旋转，再叠加平移
+    // transformMat = glm::rotate(transformMat, glm::radians(90.0f), glm::vec3(0, 0, 1));
+
+    // 先缩放，后平移
+    // transformMat = glm::scale(transformMat, glm::vec3(0.1f, 1.0f, 1.0f));
+
+}
+
+void doTransform() {
+    // 不断旋转的目标
+    // float angle = 0.1f;
+    // transformMat = glm::rotate(transformMat, angle, glm::vec3(0.0f, 0.0f, 1.0f));
+
+    // 先平移再叠加旋转
+    // float angle = 0.1f;
+    // transformMat = glm::rotate(transformMat, glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
+
+    // 先旋转，再叠加平移
+    // transformMat = glm::translate(transformMat, glm::vec3(0.01f, 0.0f, 0.0f));
+
+    // 先缩放，后平移
+    // transformMat = glm::translate(transformMat, glm::vec3(0.01f, 0.0f, 0.0f));
+}
+
+void render() {
+    GL_LW_CALL(glClear(GL_COLOR_BUFFER_BIT));
+    shader->begin();
+    shader->setFloat("time", glfwGetTime());
+    GL_LW_CALL(glBindVertexArray(allvao));
+    // glDrawArrays(GL_TRIANGLES, 0, 3);
+    grassTexture->Bind();
+    landTexture->Bind();
+    noiseTexture->Bind();
+    shader->setUniform("grassSampler", 0);
+    shader->setUniform("landSampler", 1);
+    shader->setUniform("noiseSampler", 2);
+    shader->setMat4("transformMat", transformMat);
+    shader->setMat4("viewMatrix", viewMatrix);
+    GL_LW_CALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
+    glBindVertexArray(0);
+    shader->end();
+}
+
+void prepare() {
+    GL_LW_CALL(glClearColor(0.5f, 0.5f, 0.05f, 1.0f));
+    prepareShader();
+    prepareInterLeavedVao();
+    prepareTexture();
+    prepareCamera();
+}
 
 int main() {
     LWAPP->setFrameBufferSizeCallback(frameBufferSizeCallback);
@@ -136,31 +198,14 @@ int main() {
         return -1;
     }
 
-    GL_LW_CALL(glClearColor(0.5f, 0.5f, 0.05f, 1.0f));
-    prepareShader();
-    prepareInterLeavedVao();
-    prepareTexture();
-
-
+    prepare();
+    preTransform();
     while (LWAPP->update()) {
-        GL_LW_CALL(glClear(GL_COLOR_BUFFER_BIT));
-        shader->begin();
-        shader->setFloat("time", glfwGetTime());
-        GL_LW_CALL(glBindVertexArray(allvao));
-        // glDrawArrays(GL_TRIANGLES, 0, 3);
-        grassTexture->Bind();
-        landTexture->Bind();
-        noiseTexture->Bind();
-        shader->setUniform("grassSampler", 0);
-        shader->setUniform("landSampler", 1);
-        shader->setUniform("noiseSampler", 2);
-        GL_LW_CALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
-        glBindVertexArray(0);
-        shader->end();
+        doTransform();
+        render();
     }
+
     LWAPP->destroy();
-
-
     return 0;
 }
 

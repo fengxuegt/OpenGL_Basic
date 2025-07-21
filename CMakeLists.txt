@@ -14,6 +14,7 @@ add_subdirectory(thirdparty/glad)
 add_subdirectory(wrapper)
 add_subdirectory(application)
 add_subdirectory(glframework)
+add_subdirectory(thirdparty/glm)
 
 
 # 复制文件
@@ -21,4 +22,4 @@ file(GLOB ASSETS "./assets" )
 file(COPY ${ASSETS} DESTINATION ${CMAKE_BINARY_DIR})
 
 add_executable(OpenGL_Basic main.cpp)
-target_link_libraries(OpenGL_Basic glfw glad wrapper application glframe)
+target_link_libraries(OpenGL_Basic glfw glad wrapper application glframe glm)
