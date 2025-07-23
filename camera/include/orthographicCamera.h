@@ -21,6 +21,7 @@ public:
   float mNear = 0.0f;
   float mFar = 0.0f;
 
+  float mScale = 0.0f; // 这一点是用来实现中键缩放的
 };
 
 

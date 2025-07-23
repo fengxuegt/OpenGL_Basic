@@ -38,8 +38,15 @@ protected:
     float mCurrentY = 0.0f;
 
     std::map<int, bool> mKeyMap;
+
+    // 按住左键移动的敏感度
     float mSensitivity = 0.1f;
+
+
     Camera * mCamera = nullptr;
+
+    // 摄像机滚轮缩放速度
+    float mScaleSpeed = 0.1f;
 
 };
 

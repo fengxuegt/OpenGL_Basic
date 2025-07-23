@@ -12,10 +12,13 @@ public:
     TrackBallCameraControl();
     ~TrackBallCameraControl();
     void onCursor(float xPos, float yPos) override;
+    void onScroll(double yOffset) override;
 
 private:
     void pitch(float angle);
     void yaw(float angle);
+
+    // 摄像机中键移动的敏感度
     float mMoveSpeed = 0.01f;
 };
 

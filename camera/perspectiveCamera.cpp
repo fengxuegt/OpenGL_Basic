@@ -4,6 +4,9 @@
 
 #include "perspectiveCamera.h"
 
+#include <iostream>
+#include <ostream>
+
 PerspectiveCamera::PerspectiveCamera(float fov, float aspect, float near, float far) {
     mFov = fov;
     mAspect = aspect;
@@ -22,5 +25,7 @@ glm::mat4 PerspectiveCamera::getProjectionMatrix() {
 }
 
 void PerspectiveCamera::scale(float deltaScale) {
-
+    std::cout << "PerspectiveCamera::scale" << std::endl;
+    glm::vec3 front = glm::cross(mUp, mRight);
+    mPosition += front * deltaScale;
 }

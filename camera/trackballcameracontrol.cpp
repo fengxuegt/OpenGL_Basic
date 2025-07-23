@@ -35,6 +35,10 @@ void TrackBallCameraControl::onCursor(float xPos, float yPos) {
     mCurrentY = yPos;
 }
 
+void TrackBallCameraControl::onScroll(double yOffset) {
+    mCamera->scale(yOffset * mScaleSpeed);
+}
+
 void TrackBallCameraControl::pitch(float angle) {
     // 上下点头
     // 这个旋转是绕着摄像机本身的right向量进行旋转，因此构建旋转矩阵

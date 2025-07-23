@@ -60,7 +60,7 @@ void CameraControl::onKey(int key, int scancode, int action, int mods) {
 }
 
 void CameraControl::onScroll(double yOffset) {
-    mCamera->scale(yOffset);
+    mCamera->scale(yOffset * mScaleSpeed);
 }
 
 void CameraControl::setCamera(Camera *camera) {

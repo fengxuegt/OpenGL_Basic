@@ -1,4 +1,5 @@
 #include <iostream>
+#include <orthographicCamera.h>
 #include <perspectiveCamera.h>
 #include <shader.h>
 
@@ -141,10 +142,12 @@ void prepareTexture() {
 }
 glm::mat4 viewMatrix = glm::mat4(1.0f);
 void prepareCamera() {
-    camera = new PerspectiveCamera(60.0f,
-        (float)LWAPP->getWidth() / (float)LWAPP->getHeight(),
-        0.1f,
-        100.0f);
+    // camera = new PerspectiveCamera(60.0f,
+    //     (float)LWAPP->getWidth() / (float)LWAPP->getHeight(),
+    //     0.1f,
+    //     100.0f);
+    float size = 6.0f;
+    camera = new OrthographicCamera(-size, size, size, -size, size, -size);
 
     cameraControl = new TrackBallCameraControl();
     cameraControl->setCamera(camera);
@@ -252,5 +255,5 @@ void cursorCallBack(GLFWwindow* window, double xpos, double ypos) {
 
 void scrollCallBack(GLFWwindow* window, double xoffset, double yoffset) {
     std::cout << "scrollCallback " <<  yoffset << std::endl;
-
+    cameraControl->onScroll(yoffset);
 }
