@@ -12,6 +12,9 @@ class GLFWwindow;
 #define LWAPP Application::getInstance()
 using FrameBufferSizeCallback = void(*) (GLFWwindow* window, int width, int height);
 using KeyCallBack = void(*) (GLFWwindow* window, int, int, int, int);
+using MouseCallBack = void(*) (GLFWwindow*, int, int, int);
+using CursorCallBack = void(*) (GLFWwindow*, double, double);
+using ScrollCallBack = void(*) (GLFWwindow*, double, double);
 
 class Application {
 public:
@@ -31,9 +34,15 @@ public:
     }
     void setFrameBufferSizeCallback(FrameBufferSizeCallback callback);
     void setKeyCallBack(KeyCallBack callback);
+    void setMouseCallBack(MouseCallBack callback);
+    void setCursorCallBack(CursorCallBack callback);
+    void setScrollCallBack(ScrollCallBack callback);
 private:
     FrameBufferSizeCallback mFrameBufferSizeCallback{nullptr}; // 成员变量
     KeyCallBack mKeyCallBack{nullptr};
+    MouseCallBack mMouseCallBack{nullptr};
+    CursorCallBack mCursorCallBack{nullptr};
+    ScrollCallBack mScrollCallBack{nullptr};
 
 private:
       Application();

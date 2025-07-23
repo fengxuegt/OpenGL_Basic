@@ -1,16 +1,27 @@
 #include <iostream>
+#include <perspectiveCamera.h>
 #include <shader.h>
 
 #include "core.h"
 #include "checkerror.h"
 #include "application.h"
 #include "texture.h"
-
+#include "camera.h"
+#include "cameracontrol.h"
+#include "trackballcameracontrol.h"
 
 #include "stb_image.h"
 
 void frameBufferSizeCallback(GLFWwindow* window, int width, int height);
 void keyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods);
+void mouseCallBack(GLFWwindow* window, int button, int action, int mods);
+void cursorCallBack(GLFWwindow* window, double xpos, double ypos);
+void scrollCallBack(GLFWwindow* window, double xoffset, double yoffset);
+
+Camera *camera = nullptr;
+CameraControl *cameraControl = nullptr;
+
+
 Shader *shader = nullptr;
 Texture *grassTexture = nullptr;
 Texture *landTexture = nullptr;
@@ -130,7 +141,13 @@ void prepareTexture() {
 }
 glm::mat4 viewMatrix = glm::mat4(1.0f);
 void prepareCamera() {
-    viewMatrix = glm::lookAt(glm::vec3(0.5, 0, 0.5f), glm::vec3(0.5f, 0, 0), glm::vec3(0, 1, 0));
+    camera = new PerspectiveCamera(60.0f,
+        (float)LWAPP->getWidth() / (float)LWAPP->getHeight(),
+        0.1f,
+        100.0f);
+
+    cameraControl = new TrackBallCameraControl();
+    cameraControl->setCamera(camera);
 }
 
 
@@ -177,7 +194,7 @@ void render() {
     shader->setUniform("landSampler", 1);
     shader->setUniform("noiseSampler", 2);
     shader->setMat4("transformMat", transformMat);
-    shader->setMat4("viewMatrix", viewMatrix);
+    shader->setMat4("viewMatrix", camera->getViewMatrix());
     GL_LW_CALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
     glBindVertexArray(0);
     shader->end();
@@ -194,6 +211,9 @@ void prepare() {
 int main() {
     LWAPP->setFrameBufferSizeCallback(frameBufferSizeCallback);
     LWAPP->setKeyCallBack(keyCallBack);
+    LWAPP->setMouseCallBack(mouseCallBack);
+    LWAPP->setCursorCallBack(cursorCallBack);
+    LWAPP->setScrollCallBack(scrollCallBack);
     if (!LWAPP->init()) {
         return -1;
     }
@@ -202,6 +222,7 @@ int main() {
     preTransform();
     while (LWAPP->update()) {
         doTransform();
+        cameraControl->update();
         render();
     }
 
@@ -217,4 +238,19 @@ void keyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GLFW_TRUE);
     }
+    cameraControl->onKey(key, scancode, action, mods);
+}
+void mouseCallBack(GLFWwindow* window, int button, int action, int mods) {
+    double xPos, ypos;
+    glfwGetCursorPos(window, &xPos, &ypos);
+    cameraControl->onMouse(button, action, xPos, ypos);
+}
+
+void cursorCallBack(GLFWwindow* window, double xpos, double ypos) {
+    cameraControl->onCursor(xpos, ypos);
+}
+
+void scrollCallBack(GLFWwindow* window, double xoffset, double yoffset) {
+    std::cout << "scrollCallback " <<  yoffset << std::endl;
+
 }

@@ -24,6 +24,9 @@ bool Application::init(uint32_t width, uint32_t height) {
     glfwMakeContextCurrent(mWindow);
     glfwSetFramebufferSizeCallback(mWindow, mFrameBufferSizeCallback);
     glfwSetKeyCallback(mWindow, mKeyCallBack);
+    glfwSetMouseButtonCallback(mWindow, mMouseCallBack);
+    glfwSetCursorPosCallback(mWindow, mCursorCallBack);
+    glfwSetScrollCallback(mWindow, mScrollCallBack);
 
     // glad load function pointer
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -62,6 +65,16 @@ void Application::setFrameBufferSizeCallback(FrameBufferSizeCallback callback) {
 
 void Application::setKeyCallBack(KeyCallBack callback) {
     mKeyCallBack = callback;
+}
+void Application::setMouseCallBack(MouseCallBack callback) {
+    mMouseCallBack = callback;
+}
+void Application::setCursorCallBack(CursorCallBack callback) {
+    mCursorCallBack = callback;
+}
+
+void Application::setScrollCallBack(ScrollCallBack callback) {
+    mScrollCallBack = callback;
 }
 
 Application::Application() {
