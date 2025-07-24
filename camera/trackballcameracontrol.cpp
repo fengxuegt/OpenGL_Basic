@@ -14,8 +14,8 @@ void TrackBallCameraControl::onCursor(float xPos, float yPos) {
     if (mLeftMouseDown) { // 点击鼠标左键时
         float deltaX = (xPos - mCurrentX) * mSensitivity;
         float deltaY = (yPos - mCurrentY) * mSensitivity;
-        pitch(deltaY);
-        yaw(deltaX);
+        pitch(-deltaY);
+        yaw(-deltaX);
     } else if (mMiddleMouseDown) {
         float deltaX = (xPos - mCurrentX)  * mMoveSpeed;
         float deltaY = (yPos - mCurrentY) * mMoveSpeed;

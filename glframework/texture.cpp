@@ -18,7 +18,7 @@ Texture::~Texture() {
 Texture::Texture(const std::string path, int unit) {
     mTextureUnit = unit;
     int channels;
-    stbi_set_flip_vertically_on_load(1);
+    stbi_set_flip_vertically_on_load(true);
     unsigned char* data =  stbi_load(path.c_str(), &mWidth, &mHeight, &channels, STBI_rgb_alpha);
 
 

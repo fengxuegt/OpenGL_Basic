@@ -7,9 +7,10 @@ out vec2 uv;
 uniform float time;
 uniform mat4 transformMat;
 uniform mat4 viewMatrix;
+uniform mat4 projectionMatrix;
 void main() {
     vec4 position = vec4(aPosition, 1.0f);
-    gl_Position = viewMatrix * transformMat * position;
+    gl_Position = projectionMatrix * viewMatrix * transformMat * position;
     color = aColor;
     uv = aUV;
 }

@@ -142,12 +142,12 @@ void prepareTexture() {
 }
 glm::mat4 viewMatrix = glm::mat4(1.0f);
 void prepareCamera() {
-    // camera = new PerspectiveCamera(60.0f,
-    //     (float)LWAPP->getWidth() / (float)LWAPP->getHeight(),
-    //     0.1f,
-    //     100.0f);
+    camera = new PerspectiveCamera(60.0f,
+        (float)LWAPP->getWidth() / (float)LWAPP->getHeight(),
+        0.1f,
+        100.0f);
     float size = 6.0f;
-    camera = new OrthographicCamera(-size, size, size, -size, size, -size);
+    // camera = new OrthographicCamera(-size, size, -size, size, size, -size);
 
     cameraControl = new TrackBallCameraControl();
     cameraControl->setCamera(camera);
@@ -198,6 +198,7 @@ void render() {
     shader->setUniform("noiseSampler", 2);
     shader->setMat4("transformMat", transformMat);
     shader->setMat4("viewMatrix", camera->getViewMatrix());
+    shader->setMat4("projectionMatrix", camera->getProjectionMatrix());
     GL_LW_CALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
     glBindVertexArray(0);
     shader->end();
